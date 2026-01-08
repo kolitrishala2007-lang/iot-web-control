@@ -1,26 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Arduino Control Panel</title>
+  <title>IoT LED Control</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background-color: #f2f2f2;
+    }
+
+    h1 {
+      margin-top: 30px;
+    }
+
+    /* LED circle */
+    #led {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: red;
+      margin: 30px auto;
+      box-shadow: 0 0 20px red;
+    }
+
+    button {
+      width: 160px;
+      height: 45px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>Arduino Control Panel</h1>
+  <h1>IoT LED Control Panel</h1>
 
-<button onclick="sendCommand('ON')">LED ON</button>
-<br><br>
+  <div id="led"></div>
 
-<button onclick="sendCommand('OFF')">LED OFF</button>
-<br><br>
+  <button onclick="ledOn()">LED ON</button><br>
+  <button onclick="ledOff()">LED OFF</button><br>
+  <button onclick="ledBlink()">LED BLINK</button>
 
-<button onclick="sendCommand('BLINK')">LED BLINK</button>
+  <script>
+    let blinkInterval;
 
-<script>
-  function sendCommand(cmd) {
-    alert("Command sent: " + cmd);
-  }
-</script>
+    function ledOn() {
+      clearInterval(blinkInterval);
+      const led = document.getElementById("led");
+      led.style.backgroundColor = "green";
+      led.style.boxShadow = "0 0 20px green";
+    }
+
+    function ledOff() {
+      clearInterval(blinkInterval);
+      const led = document.getElementById("led");
+      led.style.backgroundColor = "red";
+      led.style.boxShadow = "0 0 20px red";
+    }
+
+    function ledBlink() {
+      clearInterval(blinkInterval);
+      const led = document.getElementById("led");
+      let isBlue = false;
+
+      blinkInterval = setInterval(() => {
+        if (isBlue) {
+          led.style.backgroundColor = "#ccc";
+          led.style.boxShadow = "none";
+        } else {
+          led.style.backgroundColor = "blue";
+          led.style.boxShadow = "0 0 20px blue";
+        }
+        isBlue = !isBlue;
+      }, 500);
+    }
+  </script>
 
 </body>
 </html>
