@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Arduino Control Panel</title>
+</head>
+
+<body>
+
+<h1>Arduino Control Panel</h1>
+
+<button onclick="sendCommand('ON')">LED ON</button>
+<br><br>
+
+<button onclick="sendCommand('OFF')">LED OFF</button>
+<br><br>
+
+<button onclick="sendCommand('BLINK')">LED BLINK</button>
+
+<script>
+  function sendCommand(cmd) {
+    alert("Command sent: " + cmd);
+  }
+</script>
+
+</body>
+</html>
