@@ -52,4 +52,37 @@
     };
   </script>
 
-  <s
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+    }
+    #led {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin: 20px auto;
+      background: red;
+      box-shadow: 0 0 20px #000;
+    }
+    button {
+      width: 160px;
+      height: 45px;
+      margin: 8px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🌍 Global Real-Time LED Control</h1>
+
+<div id="led"></div>
+
+<button onclick="setLED('ON')">LED ON</button><br>
+<button onclick="setLED('OFF')">LED OFF</button><br>
+<button onclick="setLED('BLINK')">LED BLINK</button>
+
+</body>
+</html>
