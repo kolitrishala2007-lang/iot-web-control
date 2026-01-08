@@ -1,74 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>IoT LED Sync</title>
+  <title>Global Real-Time LED Control</title>
 
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <!-- Firebase v9 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-  <style>
-    body { text-align: center; font-family: Arial; }
-    #led {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      margin: 20px auto;
-      background: red;
+    // 🔴 REPLACE WITH YOUR FIREBASE CONFIG
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+      projectId: "YOUR_PROJECT"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const ledRef = ref(db, "ledState");
+
+    let blinkTimer = null;
+
+    function updateLED(state) {
+      const led = document.getElementById("led");
+      clearInterval(blinkTimer);
+
+      if (state === "ON") {
+        led.style.background = "green";
+      } 
+      else if (state === "OFF") {
+        led.style.background = "red";
+      } 
+      else if (state === "BLINK") {
+        let on = false;
+        blinkTimer = setInterval(() => {
+          led.style.background = on ? "blue" : "#ccc";
+          on = !on;
+        }, 500);
+      }
     }
-    button {
-      width: 150px;
-      height: 45px;
-      margin: 8px;
-      font-size: 16px;
-    }
-  </style>
-</head>
 
-<body>
+    // 🔁 REAL-TIME LISTENER (THIS IS THE KEY)
+    onValue(ledRef, snapshot => {
+      updateLED(snapshot.val());
+    });
 
-<h1>Real-Time IoT LED Control</h1>
-<div id="led"></div>
+    // Button functions
+    window.setLED = function(state) {
+      set(ledRef, state);
+    };
+  </script>
 
-<button onclick="setLED('ON')">LED ON</button><br>
-<button onclick="setLED('OFF')">LED OFF</button><br>
-<button onclick="setLED('BLINK')">LED BLINK</button>
-
-<script>
-  // 🔴 PASTE YOUR FIREBASE CONFIG HERE
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-    projectId: "YOUR_PROJECT",
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-
-  function setLED(state) {
-    db.ref("led").set(state);
-  }
-
-  // REAL-TIME LISTENER (SYNC)
-  db.ref("led").on("value", snapshot => {
-    const state = snapshot.val();
-    const led = document.getElementById("led");
-
-    if (state === "ON") {
-      led.style.background = "green";
-    } 
-    else if (state === "OFF") {
-      led.style.background = "red";
-    } 
-    else if (state === "BLINK") {
-      let on = false;
-      setInterval(() => {
-        led.style.background = on ? "blue" : "#ccc";
-        on = !on;
-      }, 500);
-    }
-  });
-</script>
-
-</body>
-</html>
+  <s
